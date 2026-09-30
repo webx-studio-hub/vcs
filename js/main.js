@@ -163,6 +163,47 @@
     reviews.classList.add("is-animated");
   }
 
+  /* ---------- Testimonials: click a card to open it in a pop-up ---------- */
+  if (reviews) {
+    const modal = document.createElement("dialog");
+    modal.className = "review-modal";
+    modal.setAttribute("aria-label", "Testimonial");
+    document.body.appendChild(modal);
+
+    reviews.querySelectorAll(".review:not([aria-hidden])").forEach((card) => {
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", "Read review by " + card.querySelector("strong").textContent);
+    });
+
+    const open = (card) => {
+      const copy = card.cloneNode(true);
+      copy.removeAttribute("aria-hidden");
+      copy.removeAttribute("tabindex");
+      copy.removeAttribute("role");
+      copy.removeAttribute("aria-label");
+      modal.replaceChildren(copy);
+      const close = document.createElement("button");
+      close.className = "review-modal__close";
+      close.setAttribute("aria-label", "Close");
+      close.textContent = "×";
+      close.addEventListener("click", () => modal.close());
+      modal.appendChild(close);
+      modal.showModal();
+    };
+
+    reviews.addEventListener("click", (e) => {
+      const card = e.target.closest(".review");
+      if (card) open(card);
+    });
+    reviews.addEventListener("keydown", (e) => {
+      const card = e.target.closest(".review");
+      if (card && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); open(card); }
+    });
+    // Close when clicking the backdrop
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
+  }
+
   /* ---------- Gallery: auto-scrolling marquee with drag ---------- */
   const gallery = document.getElementById("galleryTrack");
   if (gallery) {

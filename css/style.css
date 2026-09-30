@@ -396,7 +396,12 @@ button { font: inherit; cursor: pointer; }
 .service:hover img { transform: scale(1.06); }
 .service__body { position: absolute; left: 36px; right: 80px; bottom: 30px; }
 .service h3 { font-family: var(--font-head); font-weight: 600; font-size: 25.13px; line-height: 1.2; }
-.service p { margin-top: 8px; max-width: 286px; font-size: 17.33px; font-weight: 500; line-height: 21.7px; color: #d5d5d5; }
+.service p { margin-top: 8px; max-width: 286px; font-size: 17.33px; font-weight: 500; line-height: 21.7px; color: #d5d5d5;
+  max-height: 0; opacity: 0; overflow: hidden; transform: translateY(8px);
+  transition: max-height .45s var(--ease), opacity .35s, transform .45s var(--ease);
+}
+.service:hover p, .service:focus-visible p { max-height: 90px; opacity: 1; transform: none; }
+@media (hover: none) { .service p { max-height: none; opacity: 1; transform: none; } }
 .service--study .service__body { bottom: 30px; }
 .service__arrow {
   position: absolute;
@@ -819,7 +824,6 @@ button { font: inherit; cursor: pointer; }
 .reviews__col--offset { padding-top: 0; }
 .reviews__inner { display: flex; flex-direction: column; gap: 24px; padding: 8px 2px; }
 .reviews.is-animated .reviews__inner { animation: reviewsUp var(--dur, 45s) linear infinite; }
-.reviews:hover .reviews__inner { animation-play-state: paused; }
 @keyframes reviewsUp { to { transform: translateY(calc(-50% - 12px)); } }
 
 .review {
@@ -855,6 +859,41 @@ button { font: inherit; cursor: pointer; }
 .review footer { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; }
 .review time { font-size: 12.9px; font-weight: 500; line-height: 17.2px; letter-spacing: .52px; text-transform: uppercase; color: var(--muted); }
 .stars { color: var(--accent-blue); font-size: 19px; letter-spacing: 1px; line-height: 17px; }
+.review { cursor: pointer; transition: transform .3s var(--ease); }
+.review:hover, .review:focus-visible { transform: translateY(-3px); }
+.review:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 3px; }
+
+/* Testimonial pop-up */
+.review-modal {
+  width: min(560px, calc(100% - 32px));
+  max-height: calc(100% - 48px);
+  padding: 0;
+  border: 0;
+  border-radius: 24px;
+  background: transparent;
+  overflow: visible;
+}
+.review-modal::backdrop { background: rgba(8, 22, 48, .55); backdrop-filter: blur(4px); }
+.review-modal[open] { animation: modalIn .35s var(--ease); }
+.review-modal .review { cursor: auto; padding: 36px 32px 30px; transform: none; }
+.review-modal .review p { font-size: 18px; line-height: 28px; }
+.review-modal__close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--ink);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .18);
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+@media (max-width: 560px) { .review-modal__close { top: 8px; right: 8px; box-shadow: none; } }
 
 /* =========================================================
    Gallery
