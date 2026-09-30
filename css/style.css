@@ -838,7 +838,20 @@ button { font: inherit; cursor: pointer; }
     inset 0 -2.583px 0 rgba(61, 61, 61, .04);
 }
 .review header { display: flex; align-items: center; gap: 13px; }
-.review header img { width: 43px; height: 43px; border-radius: 50%; object-fit: cover; flex: none; }
+.review .avatar {
+  display: grid;
+  place-items: center;
+  width: 43px;
+  height: 43px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--av, var(--accent-blue));
+  color: #fff;
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .3px;
+}
 .review strong { white-space: nowrap; font-size: 18px; font-weight: 500; line-height: 21.5px; letter-spacing: -.09px; color: #272727; }
 .review .tag {
   margin-left: auto;
