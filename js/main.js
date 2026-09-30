@@ -20,6 +20,13 @@
   const burger = document.getElementById("burger");
   const nav = document.getElementById("nav");
   const setNav = (open) => {
+    if (open) {
+      // grow the menu panel out of the burger, and start the links below the header
+      const b = burger.getBoundingClientRect();
+      nav.style.setProperty("--ox", b.left + b.width / 2 + "px");
+      nav.style.setProperty("--oy", b.top + b.height / 2 + "px");
+      nav.style.setProperty("--nav-top", header.getBoundingClientRect().bottom + 12 + "px");
+    }
     burger.setAttribute("aria-expanded", String(open));
     burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     nav.classList.toggle("is-open", open);
@@ -132,20 +139,43 @@
   const prev = document.getElementById("destPrev");
   const next = document.getElementById("destNext");
   if (track) {
-    const step = () => {
-      const card = track.querySelector(".country");
-      return card ? card.offsetWidth + 20 : 300;
+    // Infinite loop: a cloned set on each side; when scrolling settles in a
+    // clone set, jump silently by one set width back into the originals.
+    const originals = [...track.children];
+    const clone = (card) => {
+      const c = card.cloneNode(true);
+      c.setAttribute("aria-hidden", "true");
+      return c;
     };
-    const update = () => {
-      const max = track.scrollWidth - track.clientWidth - 2;
-      prev.disabled = track.scrollLeft <= 2;
-      next.disabled = track.scrollLeft >= max;
+    originals.forEach((card) => track.appendChild(clone(card)));
+    [...originals].reverse().forEach((card) => track.prepend(clone(card)));
+
+    let setWidth = 0;
+    const measure = () => { setWidth = originals[0].offsetLeft - track.children[0].offsetLeft; };
+    const jump = (left) => {
+      track.style.scrollBehavior = "auto";
+      track.scrollLeft = left;
+      track.style.scrollBehavior = "";
     };
-    prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
-    next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
-    track.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    update();
+    const recenter = () => {
+      if (!setWidth) return;
+      if (track.scrollLeft < setWidth * 0.5) jump(track.scrollLeft + setWidth);
+      else if (track.scrollLeft > setWidth * 1.5) jump(track.scrollLeft - setWidth);
+    };
+    const step = () => originals[0].offsetWidth + 20;
+
+    let settle;
+    track.addEventListener("scroll", () => {
+      clearTimeout(settle);
+      settle = setTimeout(recenter, 140);
+    }, { passive: true });
+    prev.addEventListener("click", () => { recenter(); track.scrollBy({ left: -step(), behavior: "smooth" }); });
+    next.addEventListener("click", () => { recenter(); track.scrollBy({ left: step(), behavior: "smooth" }); });
+
+    const init = () => { measure(); jump(setWidth); };
+    window.addEventListener("resize", init);
+    window.addEventListener("load", init);
+    init();
   }
 
   /* ---------- Testimonials: infinite vertical ticker ---------- */
@@ -241,9 +271,12 @@
       if (!loopWidth) return;
       offset = ((offset % loopWidth) + loopWidth) % loopWidth;
     };
+    // phones get a plain swipeable row instead (see CSS)
+    const mobile = window.matchMedia("(max-width: 680px)");
     const frame = (now) => {
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
+      if (mobile.matches) { requestAnimationFrame(frame); return; }
       if (!dragging && !hovering) offset += speed * dt;
       wrap();
       inner.style.transform = `translate3d(${-offset}px,0,0)`;
@@ -253,6 +286,7 @@
     gallery.addEventListener("pointerenter", () => { hovering = true; });
     gallery.addEventListener("pointerleave", () => { hovering = false; dragging = false; gallery.classList.remove("is-dragging"); });
     gallery.addEventListener("pointerdown", (e) => {
+      if (mobile.matches) return;
       dragging = true;
       startX = e.clientX;
       startOffset = offset;
