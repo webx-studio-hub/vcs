@@ -246,6 +246,8 @@
       video.poster = howVideo.querySelector(".how__thumb").src;
       howVideo.appendChild(video);
       howVideo.classList.add("is-playing");
+      const credit = document.querySelector(".how__credit");
+      if (credit) credit.hidden = false;
       video.play().catch(() => {});
       video.focus();
     });
