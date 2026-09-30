@@ -234,6 +234,23 @@
     modal.addEventListener("click", (e) => { if (e.target === modal) modal.close(); });
   }
 
+  /* ---------- How it works: thumbnail swaps to the video on click ---------- */
+  const howVideo = document.getElementById("howVideo");
+  if (howVideo) {
+    howVideo.addEventListener("click", () => {
+      if (howVideo.classList.contains("is-playing")) return;
+      const video = document.createElement("video");
+      video.src = howVideo.dataset.video;
+      video.controls = true;
+      video.playsInline = true;
+      video.poster = howVideo.querySelector(".how__thumb").src;
+      howVideo.appendChild(video);
+      howVideo.classList.add("is-playing");
+      video.play().catch(() => {});
+      video.focus();
+    });
+  }
+
   /* ---------- Gallery: auto-scrolling marquee with drag ---------- */
   const gallery = document.getElementById("galleryTrack");
   if (gallery) {

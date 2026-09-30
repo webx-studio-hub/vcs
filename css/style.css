@@ -517,6 +517,42 @@ button { font: inherit; cursor: pointer; }
 .how__play svg { width: 34px; height: 34px; margin-left: 4px; }
 .how__play:hover { transform: scale(1.08); box-shadow: 0 0 0 18px rgba(153, 241, 60, .25); }
 
+/* video thumbnail → plays in place */
+.how__media--video { isolation: isolate; cursor: pointer; }
+.how__thumb, .how__media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.how__thumb { z-index: -2; transition: transform .8s var(--ease); }
+.how__media--video::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(1, 50, 143, .15) 0%, rgba(1, 30, 90, .65) 100%);
+  transition: opacity .4s;
+}
+.how__media--video:hover .how__thumb { transform: scale(1.04); }
+.how__media--video .how__play { animation: playPulse 2.4s ease-out infinite; }
+@keyframes playPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(153, 241, 60, .55); }
+  70%  { box-shadow: 0 0 0 22px rgba(153, 241, 60, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(153, 241, 60, 0); }
+}
+.how__caption {
+  position: absolute;
+  left: 28px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  pointer-events: none;
+}
+.how__caption strong { font-family: var(--font-head); font-size: 20px; font-weight: 600; }
+.how__caption span { font-size: 14px; color: rgba(255, 255, 255, .75); }
+.how__media.is-playing { cursor: auto; background: #000; }
+.how__media.is-playing::before,
+.how__media.is-playing .how__thumb,
+.how__media.is-playing .how__play,
+.how__media.is-playing .how__caption { display: none; }
+
 .steps {
   --gutter: 64px;   /* space left of the cards for the rail */
   --rail-x: 20px;   /* rail position inside that gutter */
