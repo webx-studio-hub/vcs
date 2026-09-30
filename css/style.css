@@ -1207,9 +1207,11 @@ button { font: inherit; cursor: pointer; }
 .hero--academy .hero__panel::after  { background: linear-gradient(90deg, rgba(0, 40, 100, .93) 0%, rgba(0, 40, 100, .7) 42%, rgba(113, 181, 40, .38) 100%); }
 .hero--contact .hero__panel::after  { background: linear-gradient(90deg, rgba(0, 0, 0, .8) 0%, rgba(0, 0, 0, .52) 50%, rgba(1, 50, 143, .28) 100%); }
 .hero--academy .hero__bg { object-position: 70% 30%; }
-/* inner-page titles: always exactly two lines on wider screens */
-.hero__title--2l { width: max-content; max-width: calc(100vw - 96px); }
-.hero__title--2l span { display: block; white-space: nowrap; }
+/* inner-page titles: a slightly wider wrapper so they wrap to two lines on desktop */
+.hero--about .hero__content,
+.hero--services .hero__content,
+.hero--academy .hero__content,
+.hero--contact .hero__content { max-width: 680px; }
 
 /* ---------- Shared bits ---------- */
 .btn--ghost { background: transparent; color: var(--blue); box-shadow: inset 0 0 0 1.5px var(--blue); }
@@ -1690,7 +1692,6 @@ button { font: inherit; cursor: pointer; }
 
   .hero__panel { padding: 48px 24px; min-height: 560px; align-items: flex-end; }
   .hero__title { font-size: 38px; letter-spacing: -1px; }
-  .hero__title--2l { font-size: min(38px, 6.6vw); max-width: 100%; }
   .hero__overline { font-size: 12px; letter-spacing: .6px; }
   .hero__text { font-size: 16px; line-height: 25px; }
   .hero__bg { object-position: 65% 50%; }
