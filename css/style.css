@@ -1674,7 +1674,7 @@ button { font: inherit; cursor: pointer; }
   .h2 { font-size: 34px; }
   .eyebrow { font-size: 17px; gap: 12px; }
   .plane { width: 36px; height: 27px; }
-  .topbar p { font-size: 13px; }
+  .topbar { display: none; } /* no announcement bar on phones */
   .header__logo img { width: 56px; height: 55px; border-radius: 16px; }
 
   .hero__panel { padding: 48px 24px; min-height: 560px; align-items: flex-end; }
